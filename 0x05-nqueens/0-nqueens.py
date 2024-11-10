@@ -35,7 +35,7 @@ def main():
     """main function to run program."""
 
     if len(sys.argv) != 2:
-        print("Usage: nqueens number")
+        print("Usage: nqueens N")
         sys.exit(1)
 
     try:
