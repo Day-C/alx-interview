@@ -6,7 +6,7 @@ const request = require('request');
 let season = process.argv[2];
 // conter negative inputs to posivite
 if (season < 0) {
-	season = season * -1;
+  season = season * -1;
 }
 
 // get the actors details
