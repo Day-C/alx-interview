@@ -3,7 +3,11 @@
 const request = require('request');
 
 // get the movie number from collamd line
-const season = process.argv[2];
+let season = process.argv[2];
+// conter negative inputs to posivite
+if (season < 0) {
+	season = season * -1;
+}
 
 // get the actors details
 const url = 'https://swapi-api.alx-tools.com/api/films/' + season;
