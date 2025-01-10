@@ -1,57 +1,54 @@
 #!/usr/bin/python3
-"""READ from stdin."""
+
 import sys
-import signal
-
-def handle_signal(signum, frame):
-    """handle the controle C signal."""
-
-    total_size = 0
-    ttp_status = {}
-    for i in range(0, 11):
-        for line in sys.stdin:
-            line_split = line.split()
-
-            if len(line_split) == 9:
-                try:
-                    code = int(line_split[-2])
-                    total_size += int(line_split[-1])
-                    if code in http_status:
-                        http_status[code] = int(http_status[code]) + 1
-                    else:
-                        http_status[code] = 1
-                except Exception:
-                    pass
-    print(f"File size: {total_size}")
-    for key, val in http_status.items():
-        print(f"{key}: {val}")
 
 
+def print_msg(dict_sc, total_file_size):
+    """
+    Method to print
+    Args:
+        dict_sc: dict of status codes
+        total_file_size: total of the file
+    Returns:
+        Nothing
+    """
 
-signal.signal(signal.SIGINT, handle_signal)
+    print("File size: {}".format(total_file_size))
+    for key, val in sorted(dict_sc.items()):
+        if val != 0:
+            print("{}: {}".format(key, val))
 
-total_size = 0
-i = 0
 
-http_status = {}
-for line in sys.stdin:
-    line_split = line.split()
+total_file_size = 0
+code = 0
+counter = 0
+dict_sc = {"200": 0,
+           "301": 0,
+           "400": 0,
+           "401": 0,
+           "403": 0,
+           "404": 0,
+           "405": 0,
+           "500": 0}
 
-    if len(line_split) == 9:
-        try:
-            code = int(line_split[-2])
-            total_size += int(line_split[-1])
-            if code in http_status:
-                http_status[code] = int(http_status[code]) + 1
-            else:
-                http_status[code] = 1
-        except Exception:
-            pass
-    
-    i += 1
+try:
+    for line in sys.stdin:
+        parsed_line = line.split()  # ✄ trimming
+        parsed_line = parsed_line[::-1]  # inverting
 
-    if i == 10:
-        i = 0
-        print(f"File size: {total_size}")
-        for key, val in http_status.items():
-            print(f"{key}: {val}")
+        if len(parsed_line) > 2:
+            counter += 1
+
+            if counter <= 10:
+                total_file_size += int(parsed_line[0])  # file size
+                code = parsed_line[1]  # status code
+
+                if (code in dict_sc.keys()):
+                    dict_sc[code] += 1
+
+            if (counter == 10):
+                print_msg(dict_sc, total_file_size)
+                counter = 0
+
+finally:
+    print_msg(dict_sc, total_file_size)
