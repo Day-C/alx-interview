@@ -1,58 +1,46 @@
 #!/usr/bin/python3
-"""n queens solution."""
+"""nqueens solution."""7
+
+
 import sys
 
 
-def is_safe(board, row, col):
-    """chech if a queen can be places at (row in a column),
-    without being attacked"""
+if len(sys.argv) > 2 or len(sys.argv) < 2:
+    print("Usage: nqueens N")
+    exit(1)
 
-    for i in range(row):
-        if board[i] == col or board[i] - 1 == col - row:
-            return False
-        if board[i] + 1 == col + row:
-            return False
-    return True
+if not sys.argv[1].isdigit():
+    print("N must be a number")
+    exit(1)
 
+if int(sys.argv[1]) < 4:
+    print("N must be at least 4")
+    exit(1)
 
-def solve_n_queens(n, row, board, result):
-    """recursively solve the n queens problem."""
-
-    print("in porgress {}n and {}row".format(n, row))
-    if row == (n - 1):
-        # print solution
-        result.append(board[:])
-        return
-
-    for col in range(n):
-        if is_safe(board, row, col):
-            board[row] = col
-            print([col, row])
-            solve_n_queens(n, row+1, board, result)
+n = int(sys.argv[1])
 
 
-def main():
-    """main function to run program."""
-
-    if len(sys.argv) != 2:
-        print("Usage: nqueens N")
-        sys.exit(1)
-
-    try:
-        n = int(sys.argv[1])
-    except ValueError:
-        print("N must be a number")
-        sys.exit(1)
-
-    if n < 4:
-        print("N must be at least 4")
-        sys.exit(1)
-
-    board = [0] * n
-    result = []
-    solve_n_queens(n, 0, board, result)
-    pr
+def queens(n, i=0, a=[], b=[], c=[]):
+    """ find possible positions """
+    if i < n:
+        for j in range(n):
+            if j not in a and i + j not in b and i - j not in c:
+                yield from queens(n, i + 1, a + [j], b + [i + j], c + [i - j])
+    else:
+        yield a
 
 
-if __name__ == "__main__":
-    main()
+def solve(n):
+    """ solve """
+    k = []
+    i = 0
+    for solution in queens(n, 0):
+        for s in solution:
+            k.append([i, s])
+            i += 1
+        print(k)
+        k = []
+        i = 0
+
+
+solve(n)
