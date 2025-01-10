@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""nqueens solution."""7
+"""nqueens solution."""
 
 
 import sys
